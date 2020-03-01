@@ -2,11 +2,14 @@ package com.mdlicht.zb.quicktemplate.common
 
 import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 
-abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel<R>, R> : AppCompatActivity() {
+abstract class BaseFragment<T : ViewDataBinding, VM : BaseViewModel<R>, R> : Fragment() {
 
     private lateinit var _binding: T
     protected val binding: T
@@ -26,22 +29,25 @@ abstract class BaseActivity<T : ViewDataBinding, VM : BaseViewModel<R>, R> : App
 
     abstract fun setData()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
 
-        setBinding()
+        setBinding(container)
 
         setView()
 
         setData()
+
+        return _binding.root
     }
 
-    private fun setBinding() {
-        _binding = DataBindingUtil.setContentView(this, getLayoutId())
+    private fun setBinding(container: ViewGroup?) {
+        _binding = DataBindingUtil.inflate(layoutInflater, getLayoutId(), container, false)
         _viewModel = if (::_viewModel.isInitialized) {
             _viewModel
         } else {
-            createViewModel(createRepository(this))
+            createViewModel(createRepository(context!!))
         }
         _binding.lifecycleOwner = this
         _binding.setVariable(getViewModelId(), _viewModel)

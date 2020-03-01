@@ -5,8 +5,12 @@
 
     <data>
         <variable
+            name="fm"
+            type="androidx.fragment.app.FragmentManager" />
+
+        <variable
             name="vm"
-            type="com.mdlicht.zb.quicktemplate.common.BaseViewModel" />
+            type="com.mdlicht.zb.quicktemplate.main.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,9 +22,14 @@
             android:id="@+id/bottomNav"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:onNavigationItemSelected="@{(item) -> vm.onNavigationItemSelected(fm, item)}"
+            app:menu="@menu/bottom_nav_menu"
+            app:navigationVisibility="@{true}"/>
 
         <FrameLayout
             android:id="@+id/container"
